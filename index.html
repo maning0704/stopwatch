@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIMER</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <p id="timer">00:00:00</p>
+
+        <div>
+            <button id="start_stop" class="btn btn-lg btn-primary">START</button>
+        </div>
+    </div>
+
+    <script>
+        var start;
+        var timer_id;
+
+
+        //ボタンがクリックされたら、10ミリ秒ごとに時間差を求めてタイマー表示を切り替える（繰り返し）
+        document.getElementById('start_stop').addEventListener('click', function () {
+            if (this.innerHTML === 'START') {
+                start = new Date();
+                timer_id = setInterval(goTimer, 10);
+
+                //STOPボタンにする
+                this.innerHTML = 'STOP';
+                this.classList.remove('btn-primary');
+                this.classList.add('btn-danger');
+            } else {
+                clearInterval(timer_id);
+
+                //STRTボタンに戻す
+                this.innerHTML = 'START';
+                this.classList.remove('btn-danger');
+                this.classList.add('btn-primary');
+            }
+
+        });
+
+
+        //10未満を二桁表示にする
+        var addZero = function (value) {
+            if (value < 10) {
+                value = '0' + value;
+            }
+
+            return value;
+        }
+
+
+        //現在の日時とスタート時の日時の差を求め「時：分：秒」を二桁表示させる
+        var goTimer = function () {
+            var now = new Date();
+
+            var milli = now.getTime() - start.getTime();
+            var seconds = Math.floor(milli / 1000);
+            var minutes = Math.floor(seconds / 60);
+            var hours = Math.floor(minutes / 60);
+
+            seconds = seconds - minutes * 60; /*　60秒以上を表示しない　*/
+            minutes = minutes - hours * 60;　/*　60分以上を表示しない　*/
+
+            seconds = addZero(seconds);
+            minutes = addZero(minutes);
+            hours = addZero(hours);
+
+            document.getElementById('timer').innerHTML = hours + ":" + minutes + ":" + seconds;
+        }
+
+    </script>
+
+</body>
+
+</html>
